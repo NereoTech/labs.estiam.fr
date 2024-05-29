@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+    esi-php:
+        image: silarhi/php-apache:8.2
+        ports:
+            - 8081:80
+        volumes:
+            - ./php:/app:ro
+
+    varnish:
+        image: varnish:7.3-alpine
+        command: [ "varnishd", "-F", "-f", "/etc/varnish/default.vcl", "-t" , "0" ]
+        ports:
+            - 8080:80
+        depends_on:
+            - esi-php
+        volumes:
+            - ./varnish/default.vcl:/etc/varnish/default.vcl:ro
